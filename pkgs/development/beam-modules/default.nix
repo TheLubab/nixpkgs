@@ -79,6 +79,8 @@ makeScopeWithSplicing' {
       # without helper functions buildRebar3 and buildMix.
       hex = callPackage ./hex { };
 
+      rocksdb = callPackage ./rocksdb { rocksdb-lib = pkgs.rocksdb; };
+
       inherit (pkgs.callPackages ./hooks { })
         beamCopySourceHook
         beamModuleInstallHook
