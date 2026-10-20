@@ -4,6 +4,7 @@
   fetchFromGitHub,
   cmake,
   nix-update-script,
+  pkg-config,
 
   # rename to avoid recursion since this module share same name
   rocksdb-lib,
@@ -41,7 +42,10 @@ buildRebar3 {
 
   beamDeps = [ ];
 
-  nativeBuildInputs = [ cmake ];
+  nativeBuildInputs = [
+    cmake
+    pkg-config
+  ];
 
   buildInputs = [
     rocksdb-lib
@@ -65,24 +69,22 @@ buildRebar3 {
       find_library(CROARING_LIBRARY roaring REQUIRED)"
   '';
 
-  env = {
-    ERLANG_ROCKSDB_OPTS = lib.concatStringsSep " " [
-      (lib.cmakeBool "WITH_SYSTEM_ROCKSDB" true)
-      (lib.cmakeBool "WITH_SNAPPY" withSnappy)
-      (lib.cmakeBool "WITH_LZ4" withLz4)
-      (lib.cmakeBool "WITH_BZ2" withBzip2)
-      (lib.cmakeBool "WITH_ZLIB" withZlib)
-      (lib.cmakeBool "WITH_ZSTD" withZstd)
-      (lib.cmakeBool "WITH_TBB" withTbb)
-      # never fall back to bundled copies
-      (lib.cmakeBool "WITH_BUNDLE_ZSTD" false)
-      (lib.cmakeBool "WITH_BUNDLE_SNAPPY" false)
-      (lib.cmakeBool "WITH_BUNDLE_LZ4" false)
-      "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
-    ];
-  };
-
   preBuild = ''
+    export ERLANG_ROCKSDB_OPTS="${
+      lib.concatStringsSep " " [
+        (lib.cmakeBool "WITH_SYSTEM_ROCKSDB" true)
+        (lib.cmakeBool "WITH_SNAPPY" withSnappy)
+        (lib.cmakeBool "WITH_LZ4" withLz4)
+        (lib.cmakeBool "WITH_BZ2" withBzip2)
+        (lib.cmakeBool "WITH_ZLIB" withZlib)
+        (lib.cmakeBool "WITH_ZSTD" withZstd)
+        (lib.cmakeBool "WITH_TBB" withTbb)
+        (lib.cmakeBool "WITH_BUNDLE_ZSTD" false)
+        (lib.cmakeBool "WITH_BUNDLE_SNAPPY" false)
+        (lib.cmakeBool "WITH_BUNDLE_LZ4" false)
+        "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
+      ]
+    }"
     export ERLANG_ROCKSDB_BUILDOPTS="-j$NIX_BUILD_CORES"
   '';
 
