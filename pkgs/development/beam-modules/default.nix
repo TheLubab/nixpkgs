@@ -81,7 +81,7 @@ makeScopeWithSplicing' {
 
       rocksdb = callPackage ./rocksdb {
         rocksdb-lib = pkgs.rocksdb.overrideAttrs rec {
-          version = "11.8.1";
+          version = "11.1.2";
           src = pkgs.fetchFromGitHub {
             owner = "facebook";
             repo = "rocksdb";
