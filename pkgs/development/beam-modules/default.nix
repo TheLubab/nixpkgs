@@ -79,7 +79,7 @@ makeScopeWithSplicing' {
       # without helper functions buildRebar3 and buildMix.
       hex = callPackage ./hex { };
 
-      rocksdb-c = callPackage ./rocksdb {
+      rocksdb = callPackage ./rocksdb {
         rocksdb-lib = pkgs.rocksdb.overrideAttrs rec {
           version = "11.1.2";
           src = pkgs.fetchFromGitHub {
