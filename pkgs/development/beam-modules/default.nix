@@ -79,7 +79,17 @@ makeScopeWithSplicing' {
       # without helper functions buildRebar3 and buildMix.
       hex = callPackage ./hex { };
 
-      rocksdb = callPackage ./rocksdb { rocksdb-lib = pkgs.rocksdb; };
+      rocksdb = callPackage ./rocksdb {
+        rocksdb-lib = pkgs.rocksdb.overrideAttrs rec {
+          version = "11.8.1";
+          src = pkgs.fetchFromGitHub {
+            owner = "facebook";
+            repo = "rocksdb";
+            tag = "v${version}";
+            hash = "sha256-zjOo0H8/qA879Lcw5wHp2BZzOhl+/wYluxKD9RCfQ+0=";
+          };
+        };
+      };
 
       inherit (pkgs.callPackages ./hooks { })
         beamCopySourceHook
